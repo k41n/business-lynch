@@ -19,7 +19,6 @@ const theme = {
 };
 
 const App = ({ Component, pageProps }) => {
-  console.log('pageProps', pageProps);
   const cookies = cookie.loadAll();
 
   return (

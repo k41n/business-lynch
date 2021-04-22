@@ -20,8 +20,11 @@ export const getServerSideProps = async ({ req, res, query }) => {
 
   const cookies = cookie.parse(req.headers.cookie);
   const utm = cookies[UTM_COOKIE];
-  const tempToken: Token = cache.get(`utm_${utm}`);
+  const tempToken: Token = await cache.get(`utm_${utm}`);
+  console.log('key: ', process.env.NEXT_PUBLIC_API_KEY);
+  console.log('secret: ', process.env.NEXT_PUBLIC_API_SECRET);
   console.log('Read cache', utm, tempToken);
+  await cache.delete(`utm_${utm}`);
   const oauth = initOAuth();
 
   const token = {
@@ -30,12 +33,15 @@ export const getServerSideProps = async ({ req, res, query }) => {
   };
 
   const headers = oauth.toHeader(oauth.authorize(request_data, token));
+  console.log('Headers', headers);
+  console.log('request_data', request_data);
 
   const fetchResult = await fetch(request_data.url, {
     method: 'POST',
     headers: headers as unknown as HeadersInit,
   });
   const responseText = await fetchResult.text();
+  console.log('Response', responseText);
   const parsedAuthToken = querystring.parse(responseText);
   res.setHeader('Set-Cookie', cookie.serialize(TOKEN_COOKIE, JSON.stringify(parsedAuthToken), {
     path: '/',

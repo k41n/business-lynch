@@ -1,4 +1,5 @@
 import redis from 'redis';
+import { promisify } from 'util';
 
 var client = redis.createClient({
   host: process.env.NEXT_REDIS_HOST,
@@ -10,11 +11,15 @@ client.on('error', function (err) {
   throw err;
 });
 
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
+const deleteAsync = promisify(client.del).bind(client);
+
 export const cache = {
   set: (key: string, value: any) => 
-    client.set(key, JSON.stringify(value)),
+    setAsync(key, JSON.stringify(value)),
   get: (key: string) =>
-    client.get(key),
+    getAsync(key),
   delete: (key: string) =>
-    client.delete(key),
+    deleteAsync(key),
 }

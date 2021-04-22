@@ -17,7 +17,7 @@ const requestToken = async () => {
 
   const fetchResult = await fetch(request_data.url, {
     method: 'POST',
-    headers: headers as unknown as HeadersInit,
+    headers: (headers as unknown) as HeadersInit,
     mode: 'cors',
   });
 
@@ -27,14 +27,21 @@ const requestToken = async () => {
 
 export default async (_req, res) => {
   const utm = uuidv4();
-  return requestToken().then(token => {
-    console.log('Setting cache ', `utm_${utm}`, token);
-    cache.set(`utm_${utm}`, token);
-    res.setHeader('Set-Cookie', cookie.serialize(UTM_COOKIE, utm, {
-      httpOnly: true,
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7 // 1 week
-    }));
-    res.json(token);
-  }, err => res.status(500).json(err));
-}
+  return requestToken().then(
+    (token) => {
+      console.log('Setting cache ', `utm_${utm}`, token);
+      cache.set(`utm_${utm}`, token).then(() => {
+        res.setHeader(
+          'Set-Cookie',
+          cookie.serialize(UTM_COOKIE, utm, {
+            httpOnly: true,
+            path: '/',
+            maxAge: 60 * 60 * 24 * 7, // 1 week
+          })
+        );
+        res.json(token);
+      });
+    },
+    (err) => res.status(500).json(err)
+  );
+};
