@@ -7,7 +7,6 @@ const requestTokenFromApi = async () => {
 
 export const handleSignIn = async () => {
   const tempToken = await requestTokenFromApi();
-  console.log(tempToken);
   const authURL = `${AUTHORIZE_URL}?oauth_token=${tempToken.oauth_token}`;
   location.href = authURL
 };

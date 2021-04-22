@@ -29,7 +29,6 @@ export default async (_req, res) => {
   const utm = uuidv4();
   return requestToken().then(
     (token) => {
-      console.log('Setting cache ', `utm_${utm}`, token);
       cache.set(`utm_${utm}`, token).then(() => {
         res.setHeader(
           'Set-Cookie',

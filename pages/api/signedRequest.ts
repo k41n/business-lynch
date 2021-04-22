@@ -26,10 +26,6 @@ export const signedRequest = async (
     };
 
     const headers = oauth.toHeader(oauth.authorize(request_data, token));
-    console.log('headers', headers)
-    console.log('method', method);
-    console.log('url', url);
-    console.log('data', data);
 
     const fetchResult = await fetch(request_data.url, {
       method: method,

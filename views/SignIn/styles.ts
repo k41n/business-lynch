@@ -12,6 +12,7 @@ export const SigninButton = styled.div`
   align-items: center;
   background: #4c7ebf;
   border-radius: 4px;
+  cursor: pointer;
   justify-content: center;
   display: flex;
   height: 10vh;
