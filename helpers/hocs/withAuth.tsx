@@ -7,7 +7,7 @@ const isBrowser = () => typeof window !== 'undefined';
 
 export const withAuth = (Component: React.FC) => {
   const serverCondition = (ctx) => {
-    return !ctx.req.headers.cookie.includes(TOKEN_COOKIE);
+    return !(ctx.req.headers.cookie || '').includes(TOKEN_COOKIE);
   }
 
   const getServerSideProps = async (ctx) => {
